@@ -47,7 +47,7 @@
         <dependency>
             <groupId>org.webjars</groupId>
             <artifactId>webjars-locator-core</artifactId>
-            <version>0.30</version>
+            <version>0.31-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
@@ -168,6 +168,11 @@
                 <artifactId>maven-bundle-plugin</artifactId>
                 <version>3.0.1</version>
                 <extensions>true</extensions>
+                <configuration>
+                    <instructions>
+                        <Fragment-Host>org.webjars.locator-core</Fragment-Host>
+                    </instructions>
+                </configuration>
             </plugin>
         </plugins>
     </build>
