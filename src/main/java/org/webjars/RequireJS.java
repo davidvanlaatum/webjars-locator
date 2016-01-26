@@ -37,9 +37,9 @@ public final class RequireJS {
     private static Map<String, ObjectNode> requireConfigJson;
     private static Map<String, ObjectNode> requireConfigJsonCdn;
 
-    private static ClassLoader resourceLocator = RequireJS.class.getClassLoader ();
+    private static ClassLoader resourceLocator = RequireJS.class.getClassLoader();
 
-    public synchronized static void setResourceLocator ( ClassLoader locator ) {
+    public synchronized static void setResourceLocator(ClassLoader locator) {
         resourceLocator = locator;
     }
 
