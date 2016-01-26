@@ -21,3 +21,33 @@ Advanced usage
 --------------
 
 The locator can also be configured with the class loaders that it should use for looking up resources and filter the types of resources that should be included for searching. Please visit the source code for more information.
+
+OSGi
+--------------
+
+Example servlet registered by Blueprint with http whiteboard
+
+    @OsgiServiceProvider( classes = Servlet.class )
+    @Properties( {
+                         @Property( name = "osgi.http.whiteboard.servlet.pattern", value = "/webjarsjs" ),
+                         @Property( name = "osgi.http.whiteboard.servlet.name", value = "WebJars RequireJS Handler" )
+                 } )
+    @Named( "WebJarsRequireJSServlet" )
+    public class WebJarsRequireJSServlet extends HttpServlet {
+        @Inject
+        private BundleContext bundleContext;
+
+        @Override
+        protected void doGet ( HttpServletRequest req, HttpServletResponse resp ) throws ServletException, IOException {
+            resp.setContentType ( "application/javascript" );
+            try ( ServletOutputStream out = resp.getOutputStream () ) {
+                out.print (
+                        RequireJS.generateSetupJavaScript ( Collections.singletonList ( "/webjars/" ) ) );
+            }
+        }
+
+        @PostConstruct
+        public void init () {
+            RequireJS.setResourceLocator ( new OSGIResourceLocatorImpl ( bundleContext ) );
+        }
+    }
