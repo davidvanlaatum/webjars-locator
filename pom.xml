@@ -8,7 +8,7 @@
         <version>7</version>
     </parent>
 
-    <packaging>jar</packaging>
+    <packaging>bundle</packaging>
     <groupId>org.webjars</groupId>
     <artifactId>webjars-locator</artifactId>
     <version>0.30-SNAPSHOT</version>
@@ -124,6 +124,13 @@
             <version>5.8.19</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.osgi</groupId>
+            <artifactId>org.osgi.core</artifactId>
+            <version>5.0.0</version>
+            <scope>provided</scope>
+            <optional>true</optional>
+        </dependency>
     </dependencies>
 
     <build>
@@ -154,6 +161,13 @@
                     <nexusUrl>https://oss.sonatype.org/</nexusUrl>
                     <autoReleaseAfterClose>true</autoReleaseAfterClose>
                 </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <version>3.0.1</version>
+                <extensions>true</extensions>
             </plugin>
         </plugins>
     </build>
