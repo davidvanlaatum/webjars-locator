@@ -37,12 +37,6 @@ public final class RequireJS {
     private static Map<String, ObjectNode> requireConfigJson;
     private static Map<String, ObjectNode> requireConfigJsonCdn;
 
-    private static ClassLoader resourceLocator = RequireJS.class.getClassLoader();
-
-    public synchronized static void setResourceLocator(ClassLoader locator) {
-        resourceLocator = locator;
-    }
-
     /**
      * Returns the JavaScript that is used to setup the RequireJS config.
      * This value is cached in memory so that all of the processing to get the String only has to happen once.
@@ -89,6 +83,10 @@ public final class RequireJS {
         requireConfigJsonCdn = null;
     }
 
+    private static ClassLoader getResourceLocator() {
+        return BundleActivator.getResourceLocator ( RequireJS.class.getClassLoader () );
+    }
+
     /**
      * Returns the JavaScript that is used to setup the RequireJS config.
      * This value is not cached.
@@ -97,7 +95,7 @@ public final class RequireJS {
      * @return The JavaScript block that can be embedded or loaded in a &lt;script&gt; tag.
      */
     public static String generateSetupJavaScript(List<String> prefixes) {
-        Map<String, String> webJars = new WebJarAssetLocator(resourceLocator).getWebJars();
+        Map<String, String> webJars = new WebJarAssetLocator(getResourceLocator()).getWebJars();
 
         return generateSetupJavaScript(prefixes, webJars);
     }
@@ -250,15 +248,15 @@ public final class RequireJS {
 
     private static ObjectNode getWebJarSetupJson(Map.Entry<String, String> webJar, List<Map.Entry<String, Boolean>> prefixes) {
 
-        if (resourceLocator.getResource("META-INF/maven/org.webjars.npm/" + webJar.getKey() + "/pom.xml") != null) {
+        if (getResourceLocator().getResource("META-INF/maven/org.webjars.npm/" + webJar.getKey() + "/pom.xml") != null) {
             // create the requirejs config from the package.json
             return getNpmWebJarRequireJsConfig(webJar, prefixes);
         }
-        else if (resourceLocator.getResource("META-INF/maven/org.webjars.bower/" + webJar.getKey() + "/pom.xml") != null) {
+        else if (getResourceLocator().getResource("META-INF/maven/org.webjars.bower/" + webJar.getKey() + "/pom.xml") != null) {
             // create the requirejs config from the bower.json
             return getBowerWebJarRequireJsConfig(webJar, prefixes);
         }
-        else if (resourceLocator.getResource("META-INF/maven/org.webjars/" + webJar.getKey() + "/pom.xml") != null) {
+        else if (getResourceLocator().getResource("META-INF/maven/org.webjars/" + webJar.getKey() + "/pom.xml") != null) {
             // get the requirejs config from the pom
             return getWebJarRequireJsConfig(webJar, prefixes);
         }
@@ -408,7 +406,7 @@ public final class RequireJS {
     }
 
     private static ObjectNode getWebJarRequireJsConfigFromMainConfig(Map.Entry<String, String> webJar, List<Map.Entry<String, Boolean>> prefixes, String path) {
-        InputStream inputStream = resourceLocator.getResourceAsStream(path);
+        InputStream inputStream = getResourceLocator().getResourceAsStream(path);
 
         if (inputStream != null) {
             try {
@@ -558,7 +556,7 @@ public final class RequireJS {
      */
     public static String getRawWebJarRequireJsConfig(Map.Entry<String, String> webJar) {
         String filename = WEBJARS_MAVEN_PREFIX + "/" + webJar.getKey() + "/pom.xml";
-        InputStream inputStream = resourceLocator.getResourceAsStream(filename);
+        InputStream inputStream = getResourceLocator().getResourceAsStream(filename);
 
         if (inputStream != null) {
             // try to parse: <root><properties><requirejs>{ /* some json */ }</requirejs></properties></root>
@@ -608,7 +606,7 @@ public final class RequireJS {
 
         // read the webJarConfigs
         String filename = WebJarAssetLocator.WEBJARS_PATH_PREFIX + "/" + webJar.getKey() + "/" + webJar.getValue() + "/" + "webjars-requirejs.js";
-        InputStream inputStream = resourceLocator.getResourceAsStream(filename);
+        InputStream inputStream = getResourceLocator().getResourceAsStream(filename);
         if (inputStream != null) {
             log.warn("The " + webJar.getKey() + " " + webJar.getValue() + " WebJar is using the legacy RequireJS config.\n" +
                     "Please try a new version of the WebJar or file or file an issue at:\n" +
