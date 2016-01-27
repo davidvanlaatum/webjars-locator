@@ -45,9 +45,4 @@ Example servlet registered by Blueprint with http whiteboard
                         RequireJS.generateSetupJavaScript ( Collections.singletonList ( "/webjars/" ) ) );
             }
         }
-
-        @PostConstruct
-        public void init () {
-            RequireJS.setResourceLocator ( new OSGIResourceLocatorImpl ( bundleContext ) );
-        }
     }
