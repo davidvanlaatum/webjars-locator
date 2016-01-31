@@ -171,6 +171,7 @@
                 <configuration>
                     <instructions>
                         <Fragment-Host>org.webjars.locator-core</Fragment-Host>
+                        <Bundle-Category>WebJars</Bundle-Category>
                     </instructions>
                 </configuration>
             </plugin>
